@@ -5,10 +5,12 @@ import 'package:args/args.dart';
 import 'package:toln/src/cli/extractor.dart';
 import 'package:toln/src/cli/syncer.dart';
 import 'package:toln/src/cli/auto_applier.dart';
+import 'package:toln/src/cli/migrator.dart'; // Import the new Migrator
 
 const String commandExtract = 'extract';
 const String commandSync = 'sync';
 const String commandAutoApply = 'auto-apply';
+const String commandMigrate = 'migrate'; // Define the new migrate command name
 
 final ArgParser argParser = ArgParser()
   ..addCommand(commandExtract)
@@ -19,7 +21,15 @@ final ArgParser argParser = ArgParser()
         ..addFlag('dry-run',
             negatable: false,
             help:
-                'Shows which files would be changed without actually modifying them.'));
+                'Shows which files would be changed without actually modifying them.'))
+  ..addCommand(
+      commandMigrate,
+      ArgParser()
+        ..addFlag('yes',
+            abbr: 'y',
+            negatable: false,
+            help:
+                'Skips the confirmation prompt before starting the migration.')); // Add the migrate command
 
 void main(List<String> arguments) async {
   try {
@@ -28,7 +38,7 @@ void main(List<String> arguments) async {
 
     if (command == null) {
       printError(
-          'No command specified. Available commands: extract, sync, auto-apply');
+          'No command specified. Available commands: extract, sync, auto-apply, migrate');
       exit(1);
     }
 
@@ -50,8 +60,6 @@ void main(List<String> arguments) async {
         final dryRun = command['dry-run'] as bool;
         await AutoApplier(projectPath, dryRun: dryRun).run();
 
-        // --- THE NEW WORKFLOW IS HERE! ---
-        // If it's not a dry-run, automatically run the extractor afterwards.
         if (!dryRun) {
           printInfo('----------------------------------------------------');
           printInfo('Auto-apply finished. Now running extractor...');
@@ -60,6 +68,34 @@ void main(List<String> arguments) async {
               'SUCCESS! Your code is now localized and translation files are ready.');
         } else {
           printSuccess('Auto-apply dry-run finished. No files were changed.');
+        }
+        break;
+      case commandMigrate: // Handle the new command
+        printWarning(
+            'WARNING: This is a destructive operation that will modify your source code.');
+        printWarning(
+            'It will convert .arb files to .ln and replace old localization calls.');
+        printWarning(
+            'Please make sure your project is under version control (e.g., Git).');
+
+        final skipConfirmation = command['yes'] as bool;
+        bool confirmed = false;
+
+        if (skipConfirmation) {
+          confirmed = true;
+        } else {
+          stdout.write('Are you sure you want to continue? (y/N): ');
+          final answer = stdin.readLineSync()?.toLowerCase() ?? 'n';
+          if (answer == 'y') {
+            confirmed = true;
+          }
+        }
+
+        if (confirmed) {
+          printInfo('Starting migration process...');
+          await Migrator(projectPath).run();
+        } else {
+          printInfo('Migration cancelled by user.');
         }
         break;
     }
@@ -77,3 +113,5 @@ void printError(String text) => stdout.writeln('\x1B[31m[ERROR] $text\x1B[0m');
 void printInfo(String text) => stdout.writeln('\x1B[34m[INFO] $text\x1B[0m');
 void printSuccess(String text) =>
     stdout.writeln('\x1B[32m[SUCCESS] $text\x1B[0m');
+void printWarning(String text) =>
+    stdout.writeln('\x1B[33m[WARNING] $text\x1B[0m');

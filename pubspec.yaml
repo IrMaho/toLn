@@ -1,7 +1,7 @@
 name: toln
 description: A revolutionary localization library for Flutter that automates the entire workflow, making multi-language support effortless and enjoyable.
-version: 0.0.1
-homepage: https://github.com/ShoghShahadat/toLn 
+version: 0.0.2
+homepage: https://github.com/ShoghShahadat/toLn
 
 environment:
   sdk: '>=3.0.0 <4.0.0'
@@ -17,6 +17,9 @@ dependencies:
   analyzer: ^6.2.0
   # The official Dart package for formatting code.
   dart_style: ^2.3.3
+  # --- NEW DEPENDENCY FOR THE 'migrate' COMMAND ---
+  # A package for parsing YAML files, used for l10n.yaml.
+  yaml: ^3.1.2
 
 dev_dependencies:
   flutter_test:
