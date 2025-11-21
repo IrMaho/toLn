@@ -14,8 +14,8 @@ class ToLn {
   factory ToLn() => _instance;
   ToLn._internal();
 
-  late final String _baseLocale;
-  late String _currentLocale;
+  String _baseLocale = 'en';
+  String _currentLocale = 'en';
 
   Map<String, String> _baseTranslations = {};
   Map<String, String> _currentTranslations = {};
@@ -105,11 +105,19 @@ class ToLn {
       final manifestContent = await rootBundle.loadString('AssetManifest.json');
       final Map<String, dynamic> manifestMap = json.decode(manifestContent);
 
+      if (kDebugMode) {
+        print('ToLn: Manifest keys found: ${manifestMap.keys.length}');
+      }
+
       final localeAssetPaths = manifestMap.keys
           .where((String key) =>
-              key.startsWith('assets/locales/') && key.endsWith('.ln'))
+              key.contains('assets/locales/') && key.endsWith('.ln'))
           .where((path) =>
               !path.endsWith('base.ln') && !path.endsWith('key_map.ln'));
+
+      if (kDebugMode) {
+        print('ToLn: Locale paths found: ${localeAssetPaths.toList()}');
+      }
 
       for (final path in localeAssetPaths) {
         final code = path.split('/').last.replaceAll('.ln', '');

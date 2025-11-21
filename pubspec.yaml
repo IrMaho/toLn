@@ -1,6 +1,6 @@
 name: toln
 description: A revolutionary localization library for Flutter that automates the entire workflow, making multi-language support effortless and enjoyable.
-version: 0.0.2
+version: 0.0.3
 homepage: https://github.com/IrMaho/toLn
 
 environment:
