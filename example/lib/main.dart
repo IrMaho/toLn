@@ -5,11 +5,11 @@ import 'package:toln/toln.dart';
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await ToLn.init(baseLocale: 'en');
-  runApp(const ShowcaseApp());
+  runApp(ShowcaseApp());
 }
 
 class ShowcaseApp extends StatelessWidget {
-  const ShowcaseApp({super.key});
+  ShowcaseApp({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -56,7 +56,7 @@ class ShowcaseApp extends StatelessWidget {
           // --- THE FINAL FIX IS HERE! ---
           // The 'const' keyword is removed.
           // This tells Flutter to rebuild ShowcasePage when the locale changes.
-          home: const ShowcasePage(),
+          home: ShowcasePage(),
         );
       },
     );
@@ -65,7 +65,7 @@ class ShowcaseApp extends StatelessWidget {
 
 class ShowcasePage extends StatelessWidget {
   // We also remove the const from here as it's no longer a const widget.
-  const ShowcasePage({super.key});
+  ShowcasePage({super.key});
 
   @override
   Widget build(BuildContext context) {

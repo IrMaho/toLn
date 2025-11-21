@@ -2,7 +2,7 @@
 
 import 'dart:convert';
 import 'package:flutter/foundation.dart' show kDebugMode, ValueNotifier;
-import 'package:flutter/services.dart' show rootBundle;
+import 'package:flutter/services.dart';
 import 'package:flutter/widgets.dart';
 
 typedef LocaleInfo = ({String code, String name});
@@ -102,24 +102,45 @@ class ToLn {
       availableLocales.add((code: inst._baseLocale, name: baseName));
 
       // 2. Scan for other locales
-      final manifestContent = await rootBundle.loadString('AssetManifest.json');
-      final Map<String, dynamic> manifestMap = json.decode(manifestContent);
+      List<String> localeAssetPaths = [];
 
-      if (kDebugMode) {
-        print('ToLn: Manifest keys found: ${manifestMap.keys.length}');
+      try {
+        // Try modern AssetManifest API first (Flutter 3.19+)
+        final manifest = await AssetManifest.loadFromAssetBundle(rootBundle);
+        localeAssetPaths = manifest.listAssets();
+      } catch (e) {
+        // Fallback to legacy JSON parsing
+        if (kDebugMode) {
+          print(
+              'ToLn: AssetManifest API failed, falling back to JSON. Error: $e');
+        }
+        try {
+          final manifestContent =
+              await rootBundle.loadString('AssetManifest.json');
+          final Map<String, dynamic> manifestMap = json.decode(manifestContent);
+          localeAssetPaths = manifestMap.keys.toList();
+        } catch (e2) {
+          if (kDebugMode) {
+            print('ToLn: AssetManifest.json failed too. Error: $e2');
+          }
+        }
       }
 
-      final localeAssetPaths = manifestMap.keys
+      if (kDebugMode) {
+        print('ToLn: All assets found: ${localeAssetPaths.length}');
+      }
+
+      final filteredPaths = localeAssetPaths
           .where((String key) =>
               key.contains('assets/locales/') && key.endsWith('.ln'))
           .where((path) =>
               !path.endsWith('base.ln') && !path.endsWith('key_map.ln'));
 
       if (kDebugMode) {
-        print('ToLn: Locale paths found: ${localeAssetPaths.toList()}');
+        print('ToLn: Locale paths found: ${filteredPaths.toList()}');
       }
 
-      for (final path in localeAssetPaths) {
+      for (final path in filteredPaths) {
         final code = path.split('/').last.replaceAll('.ln', '');
         try {
           final fileContent = await rootBundle.loadString(path);
@@ -139,8 +160,7 @@ class ToLn {
       return availableLocales;
     } catch (e) {
       if (kDebugMode) {
-        print(
-            'ToLn Error: Could not read AssetManifest.json to find locales. $e');
+        print('ToLn Error: Could not read AssetManifest to find locales. $e');
       }
       return availableLocales.isEmpty
           ? [(code: inst._baseLocale, name: inst._baseLocale.toUpperCase())]
