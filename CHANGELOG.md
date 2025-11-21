@@ -1,35 +1,113 @@
+# CHANGELOG
 
 All notable changes to this project will be documented in this file.
 
-The format is based on Keep a Changelog,
-and this project adheres to Semantic Versioning.
+The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
+and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-[0.0.1] - 2025-07-13
-✨ Added (ویژگی‌های اضافه شده)
-Initial Release of the Revolutionary toLn Library!
+## [0.0.3] - 2025-01-21
 
-Zero-Key Workflow: Completely automated key generation. Developers never need to manage translation keys.
+### 🔄 Changed
+- **Updated dependencies to latest versions:**
+  - `path`: 1.8.3 → 1.9.1
+  - `args`: 2.4.2 → 2.7.0
+  - `analyzer`: 6.2.0 → 9.0.0 (Major update)
+  - `dart_style`: 2.3.3 → 3.1.3 (Major update)
+  - `yaml`: 3.1.2 → 3.1.3
+  - `flutter_lints`: 2.0.0 → 6.0.0 (Major update)
 
-Intelligent CLI Tools: A full suite of command-line tools to manage the localization workflow.
+### 📚 Improved
+- Enhanced documentation with comprehensive examples
+- Added multilingual documentation:
+  - English (README.md)
+  - Persian/Farsi (Fa.md)
+  - Arabic (Ar.md)
+- Added cross-language links in all documentation files
 
-dart run toln extract: A powerful and accurate AST-based extractor for finding all translatable strings.
+### 🛠️ Technical
+- Resolved compatibility issues with newer Dart SDK versions
+- Improved support for modern Flutter development tools
+- Better integration with latest analyzer and dart_style packages
 
-dart run toln sync: Automatically syncs all translation files with the base file, adding missing keys.
+---
 
-dart run toln auto-apply: The magic command to refactor an entire existing project.
+## [0.0.2] - 2025-01-15
 
-Automatically adds .toLn() to all display strings in supported widgets.
+### 📝 Documentation
+- Improved README with clearer examples
+- Added more detailed API documentation
+- Enhanced CLI command descriptions
 
-Automatically injects the toln import.
+---
 
-Automatically configures the main() function with async, ensureInitialized, and ToLn.init().
+## [0.0.1] - 2025-01-13
 
-Smart Assistant: Integrated into the extract command to detect typos and similar strings, allowing reuse of existing translations.
+### ✨ Added - Initial Release!
 
-Automatic UI Updates: Uses a ValueNotifier (ToLn.localeNotifier) to rebuild the UI instantly on locale change, eliminating the need for manual setState calls.
+**Revolutionary Features:**
 
-Automatic Text Direction: ToLn.currentDirection automatically provides the correct TextDirection (LTR/RTL) based on the active language.
+#### Zero-Key Workflow
+- Completely automated key generation
+- Developers never need to manage translation keys
+- Single source of truth: your code
 
-Dynamic Language Discovery: The ToLn.getAvailableLocales() method scans the project assets to find all available languages.
+#### Intelligent CLI Tools
+A full suite of command-line tools to manage the localization workflow:
 
-Customizable Language Names: Supports an optional ln_name key in translation files for user-friendly display names, with a smart fallback to the language code.
+**`dart run toln extract`**
+- Powerful AST-based extractor for finding all translatable strings
+- Smart detection of display text in widgets
+- Automatic key generation and mapping
+
+**`dart run toln sync`**
+- Automatically syncs all translation files with the base file
+- Adds missing keys to language files
+- Preserves existing translations
+
+**`dart run toln auto-apply` - The Magic Command** ✨
+- Automatically adds `.toLn()` to all display strings in supported widgets
+- Automatically injects the `toln` import where needed
+- Automatically configures the `main()` function with:
+  - `async` keyword
+  - `WidgetsFlutterBinding.ensureInitialized()`
+  - `ToLn.init()` initialization
+- Runs `extract` automatically after applying changes
+
+#### Smart Assistant 🧠
+- Integrated into the extract command
+- Detects typos and similar strings
+- Suggests reuse of existing translations
+- Helps maintain translation consistency
+
+#### Automatic UI Updates
+- Uses `ValueNotifier` (`ToLn.localeNotifier`) for reactive updates
+- Rebuilds UI instantly on locale change
+- No manual `setState` calls needed
+- Zero-boilerplate state management for i18n
+
+#### Automatic Text Direction
+- `ToLn.currentDirection` provides correct `TextDirection`
+- Automatic switching between LTR and RTL
+- Built-in support for: Arabic (ar), Persian (fa), Hebrew (he), Urdu (ur)
+- Seamless layout adaptation
+
+#### Dynamic Language Discovery
+- `ToLn.getAvailableLocales()` scans project assets
+- Automatically finds all available `.ln` files
+- Returns language codes and display names
+- Perfect for building language selection menus
+
+#### Customizable Language Names
+- Optional `ln_name` key in translation files
+- User-friendly display names (e.g., "فارسی" instead of "FA")
+- Smart fallback to capitalized language code
+- Supports empty values with graceful degradation
+
+---
+
+## Documentation Languages
+
+📖 **Read this in other languages:**
+- [🇬🇧 English](README.md)
+- [🇮🇷 فارسی (Persian)](Fa.md)
+- [🇸🇦 العربية (Arabic)](Ar.md)

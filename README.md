@@ -1,321 +1,669 @@
 <p align="center">
-  <img src="https://user-images.githubusercontent.com/28951144/234489717-P-O-L-N-O-S-T-Ь-Ю-A-V-T-O-M-A-T-I-Ч-Е-С-К-А-Я-L-O-K-A-L-I-Z-A-Ц-И-Я.gif" alt="toLn Showcase GIF" width="600">
+  <img src="https://raw.githubusercontent.com/IrMaho/toLn/main/assets/toln-logo.png" alt="toLn Logo" width="200"/>
 </p>
 
-<h1 align="center">toLn: The Revolutionary Flutter Localization Library</h1>
+<h1 align="center">toL: Revolutionary Flutter Localization</h1>
 
 <p align="center">
-  <strong>Forget keys. Forget manual setup. Just write your code.</strong>
+  <strong>Zero keys. Zero hassle. Just code.</strong>
 </p>
 
 <p align="center">
   <a href="https://pub.dev/packages/toln"><img src="https://img.shields.io/pub/v/toln.svg?style=for-the-badge&logo=dart" alt="Pub Version"></a>
-  <a href="https://github.com/your_username/toln/blob/main/LICENSE"><img src="https://img.shields.io/github/license/your_username/toln.svg?style=for-the-badge" alt="License"></a>
+  <a href="https://github.com/IrMaho/toLn/blob/main/LICENSE"><img src="https://img.shields.io/github/license/IrMaho/toLn.svg?style=for-the-badge" alt="License"></a>
   <a href="https://flutter.dev"><img src="https://img.shields.io/badge/platform-flutter-02569B.svg?style=for-the-badge&logo=flutter" alt="Platform"></a>
-  <a href="https://github.com/your_username/toln/pulls"><img src="https://img.shields.io/badge/PRs-welcome-brightgreen.svg?style=for-the-badge" alt="PRs Welcome"></a>
+  <a href="https://github.com/IrMaho/toLn/pulls"><img src="https://img.shields.io/badge/PRs-welcome-brightgreen.svg?style=for-the-badge" alt="PRs Welcome"></a>
 </p>
 
 <p align="center">
-  <a href="https://github.com/ShoghShahadat/toLn/blob/main/Fa.md">[نسخه فارسی]</a>
+  📖 <strong>Read in other languages:</strong> 
+  <a href="Fa.md">فارسی</a> • 
+  <a href="Ar.md">العربية</a>
 </p>
 
 ---
 
-**toLn** is not just another localization library; it's a complete paradigm shift. We've built an intelligent assistant that handles the entire tedious internationalization workflow, letting you focus on what truly matters: building amazing applications.
+## 🌟 What is toLn?
 
-## Table of Contents
-- [Table of Contents](#table-of-contents)
-- [🚀 The Revolution: What Makes `toLn` Different?](#-the-revolution-what-makes-toln-different)
-- [✨ Core Features at a Glance](#-core-features-at-a-glance)
-- [🛠️ A Practical Walkthrough: Localizing an App in 5 Minutes](#️-a-practical-walkthrough-localizing-an-app-in-5-minutes)
-  - [Step 1: The Unlocalized App](#step-1-the-unlocalized-app)
-  - [Step 2: The Magic `auto-apply` Command](#step-2-the-magic-auto-apply-command)
-  - [Step 3: The Generated Files](#step-3-the-generated-files)
-  - [Step 4: Translating](#step-4-translating)
-  - [Step 5: Making it Interactive](#step-5-making-it-interactive)
-- [⚙️ The `toLn` Workflow](#️-the-toln-workflow)
-- [📚 Deep Dive: API \& CLI Reference](#-deep-dive-api--cli-reference)
-  - [The `ToLn` Class](#the-toln-class)
-    - [`static Future<void> init({required String baseLocale, String? initialLocale})`](#static-futurevoid-initrequired-string-baselocale-string-initiallocale)
-    - [`static Future<void> loadLocale(String newLocale)`](#static-futurevoid-loadlocalestring-newlocale)
-    - [`static Future<List<LocaleInfo>> getAvailableLocales()`](#static-futurelistlocaleinfo-getavailablelocales)
-    - [`static TextDirection get currentDirection`](#static-textdirection-get-currentdirection)
-    - [`static final ValueNotifier<Locale> localeNotifier`](#static-final-valuenotifierlocale-localenotifier)
-  - [The `.toLn()` Extension Method](#the-toln-extension-method)
-    - [`String toLn({String? key})`](#string-tolnstring-key)
-  - [The Command-Line Interface (CLI)](#the-command-line-interface-cli)
-    - [`dart run toln auto-apply`](#dart-run-toln-auto-apply)
-    - [`dart run toln extract`](#dart-run-toln-extract)
-    - [`dart run toln sync`](#dart-run-toln-sync)
-- [⚠️ The `const` Trap: A Crucial Note](#️-the-const-trap-a-crucial-note)
-- [💖 Contributing](#-contributing)
-- [📄 License](#-license)
+**toLn** is not just another i18n package—it's a complete paradigm shift in Flutter localization. We eliminate the tedious, error-prone workflow of managing translation keys and manual file synchronization. With toLn, your Dart code becomes the single source of truth, and intelligent automation handles everything else.
 
----
+### The Problem We Solve
 
-## 🚀 The Revolution: What Makes `toLn` Different?
+Traditional localization is painful:
+- 🔑 Inventing and managing hundreds of translation keys
+- 📝 Manually updating multiple translation files
+- 🔄 Rebuilding UI when language changes
+- 🐛 Hunting down typos across dozens of files
+- ⚡ Refactoring existing projects to add i18n
 
-Traditional localization is a nightmare of key management, manual file updates, and constant human error. **`toLn` eliminates all of it.** We believe your code should be the single source of truth.
-
-| Feature                  | The Old Way (The Pain)                                                              | The `toLn` Way (The Magic)                                                                       |
-| :----------------------- | :---------------------------------------------------------------------------------- | :----------------------------------------------------------------------------------------------- |
-| **Adding New Text** | 1. Invent a key. 2. Open `en.json`. 3. Add the key. 4. Open `fa.json`. 5. Add it again... | Write `Text('Hello World'.toLn())`. **That's it.** |
-| **Refactoring a Project**| Impossible. You have to manually add localization to every string.                  | `dart run toln auto-apply`. The library intelligently refactors your entire codebase for you.    |
-| **Fixing a Typo** | Find the key, update it in all translation files, hope you didn't miss one.         | Just fix the text in your code. Our **Smart Assistant** detects it and offers to reuse the old key. |
-| **Syncing Translations** | Manually compare JSON files to find what's missing.                                 | `dart run toln sync`. All missing keys are added to your translation files automatically.        |
-| **Updating the UI** | Use `setState` or complex state management solutions to trigger a rebuild.          | **Fully Automatic.** The UI rebuilds itself instantly when the language changes.                 |
-
-## ✨ Core Features at a Glance
-
--   ✅ **Zero-Key Workflow**: You will never have to invent or manage a translation key again.
--   🪄 **Intelligent `auto-apply`**: Automatically refactors your existing unlocalized project to use `toLn` with a single command.
--   🧠 **Smart Assistant**: Detects typos and corrections, suggesting to reuse existing translations to save you work.
--   🔄 **Automatic UI Updates**: The UI instantly updates on locale change with zero manual `setState` calls, powered by `ValueNotifier`.
--   🌍 **Automatic Text Direction**: Switches between LTR and RTL layouts automatically based on the current language.
--   ⚙️ **Fully Automated CLI**: A powerful command-line interface to `extract`, `sync`, and `auto-apply` translations.
--   🌐 **Dynamic Language Discovery**: Automatically finds all available languages in your project to build language selection menus effortlessly.
--   💅 **Customizable Language Names**: Use the optional `ln_name` key in your files to give languages beautiful display names (e.g., "فارسی" instead of "FA").
-
----
-
-## 🛠️ A Practical Walkthrough: Localizing an App in 5 Minutes
-
-Let's take a real-world app and make it multilingual.
-
-### Step 1: The Unlocalized App
-
-Imagine you have this simple Flutter page. It's written in English and has no localization.
+### The toLn Solution
 
 ```dart
-// lib/main.dart (Before toLn)
-import 'package:flutter/material.dart';
+// Traditional way❌
+Text(AppLocalizations.of(context)!.welcomeMessage)
 
-void main() {
-  runApp(const MyApp());
-}
-
-class MyApp extends StatelessWidget {
-  const MyApp({super.key});
-  @override
-  Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'My App',
-      home: MyHomePage(),
-    );
-  }
-}
-
-class MyHomePage extends StatelessWidget {
-  const MyHomePage({super.key});
-  @override
-  Widget build(BuildContext context) {
-    final String username = "Maria";
-    return Scaffold(
-      appBar: AppBar(
-        title: Text("Home Page"),
-      ),
-      body: Center(
-        child: Text("Welcome, ${username}!"),
-      ),
-    );
-  }
-}
+// The toLn way ✅
+Text('Welcome to our app!'.toLn())
 ```
 
-### Step 2: The Magic `auto-apply` Command
+That's it. No keys, no context, no boilerplate. **Just write your text.**
 
-Open your terminal in the project root and run the single magic command:
+---
 
+## 🚀 Key Features
+
+| Feature | Description |
+|---------|-------------|
+| **🎯 Zero-Key Workflow** | Never invent or manage translation keys again. toLn generates them automatically. |
+| **🪄 Auto-Refactor** | `dart run toln auto-apply` automatically adds localization to your entire app. |
+| **🧠 Smart Assistant** | Detects typos and suggests reusing existing translations. |
+| **⚡ Auto UI Update** | Language changes trigger automatic UI rebuilds—no `setState` needed. |
+| **🌍 RTL/LTR Auto** | Automatic text direction switching for Arabic, Persian, Hebrew, etc. |
+| **🔍 Language Discovery** | Auto-detects all available languages in your project. |
+| **🎨 Custom Names** | Display "Español" instead of "ES" in language pickers. |
+| **🔧 CLI Tools** | Powerful commands: `extract`, `sync`, `auto-apply`, and `migrate`. |
+
+---
+
+## ⚡ Quick Start
+
+### 1. Installation
+
+Add toLn to your `pubspec.yaml`:
+
+```yaml
+dependencies:
+  toln: ^0.0.3
+```
+
+Then run:
 ```bash
-dart run toln auto-apply
+flutter pub get
 ```
 
-### Step 3: The Generated Files
+### 2. Initial Setup (New Projects)
 
-`toLn` has now performed several actions:
-1.  **Modified your code**: It added `.toLn()`, `import`, and the `ToLn.init()` call.
-2.  **Ran `extract`**: It scanned the modified code and created files in `assets/locales/`.
-
-Your `main.dart` now looks like this:
+In your `main.dart`:
 
 ```dart
-// lib/main.dart (After toLn)
 import 'package:flutter/material.dart';
 import 'package:toln/toln.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  await ToLn.init(baseLocale: 'en'); // 'en' is the language of your code
+  await ToLn.init(baseLocale: 'en'); // Your code's language
   runApp(const MyApp());
 }
-// ... (MyApp is now wrapped in a ValueListenableBuilder)
-class MyHomePage extends StatelessWidget {
-  // ...
+
+class MyApp extends StatelessWidget {
+  const MyApp({super.key});
+
   @override
   Widget build(BuildContext context) {
-    final String username = "Maria";
+    return ValueListenableBuilder<Locale>(
+      valueListenable: ToLn.localeNotifier,
+      builder: (context, locale, child) {
+        return MaterialApp(
+          locale: locale,
+          builder: (context, child) {
+            return Directionality(
+              textDirection: ToLn.currentDirection,
+              child: child!,
+            );
+          },
+          home: HomePage(),
+        );
+      },
+    );
+  }
+}
+
+class HomePage extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text("Home Page".toLn()),
+        title: Text('My Awesome App'.toLn()),
       ),
       body: Center(
-        child: Text("Welcome, ${username}!".toLn()),
+        child: Text('Welcome to Flutter!'.toLn()),
       ),
     );
   }
 }
 ```
 
-And your `assets/locales/base.ln` file has been created:
+### 3. Extract Translations
 
-```json
-{
-  "ln_name": "",
-  "keLn1": "My App",
-  "keLn2": "Home Page",
-  "keLn3": "Welcome, $s!"
-}
+Run the extractor to generate translation files:
+
+```bash
+dart run toln extract
 ```
 
-### Step 4: Translating
+This creates `assets/locales/base.ln` and `assets/locales/key_map.ln`.
 
-1.  Copy `base.ln` and rename it to `es.ln` for Spanish.
-2.  Fill in the translations and the display name.
+### 4. Add More Languages
+
+Copy `base.ln` to create new language files:
+
+```bash
+cp assets/locales/base.ln assets/locales/es.ln
+cp assets/locales/base.ln assets/locales/fa.ln
+```
+
+Edit each file with translations:
 
 ```json
 // assets/locales/es.ln
 {
   "ln_name": "Español",
-  "keLn1": "Mi Aplicación",
-  "keLn2": "Página de Inicio",
-  "keLn3": "¡Bienvenida, $s!"
+  "keLn1": "Mi Aplicación Increíble",
+  "keLn2": "¡Bienvenido a Flutter!"
 }
 ```
 
-### Step 5: Making it Interactive
+### 5. Update pubspec.yaml
 
-Now, let's add a language switcher to the `AppBar`. `toLn` makes this incredibly easy.
+Add your locale files to assets:
+
+```yaml
+flutter:
+  assets:
+    - assets/locales/
+```
+
+🎉 **Done!** Your app is now fully localized!
+
+---
+
+## 🛠️ Advanced Usage
+
+### Language Switcher
+
+Build a beautiful language picker with zero effort:
 
 ```dart
-// In your MyHomePage build method, inside the AppBar
-actions: [
-  FutureBuilder<List<LocaleInfo>>(
-    future: ToLn.getAvailableLocales(),
-    builder: (context, snapshot) {
-      if (!snapshot.hasData) return const SizedBox();
-      return PopupMenuButton<String>(
-        icon: const Icon(Icons.language),
-        onSelected: ToLn.loadLocale, // Magic! No setState needed.
-        itemBuilder: (context) => snapshot.data!
-            .map((locale) => PopupMenuItem(value: locale.code, child: Text(locale.name)))
-            .toList(),
-      );
-    },
+AppBar(
+  title: Text('Settings'.toLn()),
+  actions: [
+    FutureBuilder<List<LocaleInfo>>(
+      future: ToLn.getAvailableLocales(),
+      builder: (context, snapshot) {
+        if (!snapshot.hasData) return const SizedBox();
+        
+        return PopupMenuButton<String>(
+          icon: const Icon(Icons.language),
+          tooltip: 'Change Language'.toLn(),
+          onSelected: (locale) => ToLn.loadLocale(locale),
+          itemBuilder: (context) => snapshot.data!.map((locale) {
+            return PopupMenuItem(
+              value: locale.code,
+              child: Text(locale.name),
+            );
+          }).toList(),
+        );
+      },
+    ),
+  ],
+)
+```
+
+### Dynamic Strings with Variables
+
+toLn automatically handles string interpolation:
+
+```dart
+final username = "Maria";
+final points = 1250;
+
+Text('Hello, $username!'.toLn())
+Text('You have $points points'.toLn())
+```
+
+In your translation files, use `$s` as a placeholder:
+
+```json
+{
+  "keLn1": "Hello, $s!",
+  "keLn2": "You have $s points"
+}
+```
+
+Spanish translation:
+
+```json
+{
+  "keLn1": "¡Hola, $s!",
+  "keLn2": "Tienes $s puntos"
+}
+```
+
+### Manual Key Override
+
+For rare cases where you want different source texts to use the same translation:
+
+```dart
+Text('OK'.toLn(key: 'confirm'))
+Text('Confirm'.toLn(key: 'confirm'))
+```
+
+Both will use the same translation key.
+
+### Integration with Common Widgets
+
+toLn works seamlessly with all Flutter widgets:
+
+```dart
+// Text widgets
+Text('Simple text'.toLn())
+Text('Hello, $name!'.toLn())
+
+// Tooltips
+IconButton(
+  icon: Icon(Icons.save),
+  tooltip: 'Save changes'.toLn(),
+  onPressed: () {},
+)
+
+// SnackBars
+ScaffoldMessenger.of(context).showSnackBar(
+  SnackBar(content: Text('Item saved successfully!'.toLn())),
+);
+
+// Dialogs
+AlertDialog(
+  title: Text('Confirm Delete'.toLn()),
+  content: Text('Are you sure you want to delete this item?'.toLn()),
+  actions: [
+    TextButton(
+      child: Text('Cancel'.toLn()),
+      onPressed: () => Navigator.pop(context),
+    ),
+    TextButton(
+      child: Text('Delete'.toLn()),
+      onPressed: () {},
+    ),
+  ],
+)
+
+// Input Fields
+TextField(
+  decoration: InputDecoration(
+    labelText: 'Email Address'.toLn(),
+    hintText: 'Enter your email'.toLn(),
+    helperText: 'We will never share your email'.toLn(),
   ),
-],
+)
 ```
-That's it! You now have a fully localized app with an automatic UI and a dynamic language menu.
 
 ---
 
-## ⚙️ The `toLn` Workflow
+## 🔧 CLI Commands
 
-`toLn` is designed to be a complete workflow, not just a library.
+### `auto-apply` - Automatic Refactoring
 
-1.  **`dart run toln auto-apply`**: Run this once on your project to make it localization-ready. It will automatically run `extract` for you afterwards.
-2.  **`dart run toln extract`**: Run this whenever you add or change texts in your UI to update your `base.ln` file.
-3.  **`dart run toln sync`**: Run this after `extract` to add the new keys to all your other language files (`fa.ln`, `de.ln`, etc.), ready for translation.
+Transform an existing project to use toLn automatically:
 
----
+```bash
+dart run toln auto-apply
+```
 
-## 📚 Deep Dive: API & CLI Reference
+**What it does:**
+1. Scans your entire `lib/` directory
+2. Adds `.toLn()` to text in widgets like `Text`, `InputDecoration`, etc.
+3. Injects `import 'package:toln/toln.dart';` where needed
+4. Configures your `main()` function with initialization
+5. Runs `extract` automatically
 
-Here is a detailed breakdown of every component of the `toLn` ecosystem.
+**Dry run mode** (see changes without modifying files):
+```bash
+dart run toln auto-apply --dry-run
+```
 
-### The `ToLn` Class
+### `extract` - Generate Translation Files
 
-This is the main class that manages the localization state.
+Scan your code and create/update translation files:
 
-#### `static Future<void> init({required String baseLocale, String? initialLocale})`
-The most important method. It sets up the entire library.
--   **`baseLocale`**: (Required) The language code of the text in your source code (e.g., 'en', 'fa').
--   **`initialLocale`**: (Optional) The language to load at startup. If not provided, `toLn` will intelligently try to use the device's system language. If the system language isn't available, it falls back to your `baseLocale`.
+```bash
+dart run toln extract
+```
 
-#### `static Future<void> loadLocale(String newLocale)`
-Changes the app's current language.
--   **`newLocale`**: The language code to switch to (e.g., 'fa', 'de').
--   **How it works**: This method loads the corresponding `.ln` file, updates the text direction, and notifies all listeners via `ToLn.localeNotifier` to trigger an automatic UI rebuild.
+**Features:**
+- Finds all `.toLn()` calls using static analysis
+- Generates `base.ln` with all texts
+- Creates `key_map.ln` for internal mapping
+- **Smart Assistant**: Detects typos and similar strings, suggests key reuse
 
-#### `static Future<List<LocaleInfo>> getAvailableLocales()`
-Automatically scans your `assets/locales/` directory and returns a list of all available languages.
--   **Returns**: A `List` of `LocaleInfo` objects. `LocaleInfo` is a record defined as `({String code, String name})`.
--   **`code`**: The language code from the filename (e.g., 'en').
--   **`name`**: The display name from the `ln_name` key inside the file. If `ln_name` is missing or empty, it defaults to the capitalized language code (e.g., 'EN').
+### `sync` - Synchronize Translation Files
 
-#### `static TextDirection get currentDirection`
-A static getter that returns the correct `TextDirection` (`TextDirection.rtl` or `TextDirection.ltr`) for the currently active locale.
+Add missing keys to all language files:
 
-#### `static final ValueNotifier<Locale> localeNotifier`
-The engine behind automatic UI updates. You can wrap your `MaterialApp` (or any part of your UI) in a `ValueListenableBuilder` listening to this notifier. When `loadLocale` is called, this notifier fires, and your UI rebuilds with the new translations.
+```bash
+dart run toln sync
+```
 
-### The `.toLn()` Extension Method
+**What it does:**
+- Compares all `.ln` files with `base.ln`
+- Adds missing keys to each language file
+- Preserves existing translations
+- Perfect for keeping translators up-to-date
 
-This is the method you will use most often.
+### `migrate` - From intl/arb to toLn
 
-#### `String toLn({String? key})`
--   **How it works**: When called on a `String`, it uses the `ToLn` singleton to find the correct translation for the current language. It intelligently handles strings with and without variables.
--   **`key`**: (Optional) A manual key (e.g., 'keLn5'). This is for the rare case where you want two different source texts to point to the same translation key.
+Got an existing project using `intl` and `.arb` files? Migrate seamlessly:
 
-### The Command-Line Interface (CLI)
+```bash
+dart run toln migrate
+```
 
-The CLI is your intelligent assistant for managing translation files.
-
-#### `dart run toln auto-apply`
-The most powerful command. It analyzes your entire project and intelligently refactors it for localization.
--   **What it does**:
-    1.  Adds `.toLn()` to string literals inside common display widgets (`Text`, `Tooltip`, etc.) and `InputDecoration` properties.
-    2.  Automatically adds `import 'package:toln/toln.dart';` to any file it modifies.
-    3.  Checks your `main()` function and ensures it is `async` and contains `WidgetsFlutterBinding.ensureInitialized()` and `ToLn.init()`.
-    4.  After it finishes, it **automatically runs the `extract` command** to generate your translation files.
--   **Options**:
-    -   `--dry-run`: Shows a report of what would be changed without actually modifying any files.
-
-#### `dart run toln extract`
-Scans your project for all `.toLn()` calls and generates/updates the `base.ln` and `key_map.ln` files.
--   **Smart Assistant**: If it finds a new string that is very similar to an existing one (e.g., you fixed a typo), it will ask you if you want to reuse the old key, saving your existing translations.
-
-#### `dart run toln sync`
-Synchronizes all your translation files (`fa.ln`, `de.ln`, etc.) with your master `base.ln` file.
--   **What it does**: It finds any keys that exist in `base.ln` but are missing in your other language files and adds them. The value will be the original text from `base.ln`, making it easy for you or your translator to find and translate new texts.
+**What it does:**
+1. Reads your `l10n.yaml` configuration
+2. Converts `.arb` files to `.ln` format
+3. Refactors all `AppLocalizations.of(context).key` calls to `.toLn()`
+4. Removes old localization delegates
+5. Cleans up old files after success
 
 ---
 
-## ⚠️ The `const` Trap: A Crucial Note
+## 📚 API Reference
 
-**Problem:** My language changes, but the text on the screen doesn't!
+### ToLn Class
 
-This is almost always caused by the `const` keyword. When you declare a widget as `const`, you are telling Flutter: "This widget is immutable and will **never** need to be rebuilt."
+#### `ToLn.init()`
 
-When `toLn` changes the language, it needs to rebuild your UI. If it encounters a `const` widget in its path, it stops, and your old text remains.
+Initialize the localization system.
 
-**Incorrect:**
 ```dart
-// This will NOT update when the language changes!
-home: const MyAwesomePage(),
+static Future<void> init({
+  required String baseLocale,
+  String? initialLocale,
+})
 ```
 
-**Correct:**
+**Parameters:**
+- `baseLocale` *(required)*: Language of your source code (e.g., 'en', 'fa')
+- `initialLocale` *(optional)*: Starting language. Defaults to device language or `baseLocale`
+
+#### `ToLn.loadLocale()`
+
+Change the app's current language.
+
 ```dart
-// Now Flutter is allowed to rebuild the page.
-home: MyAwesomePage(),
+static Future<void> loadLocale(String newLocale)
 ```
 
-**Rule of thumb: If a widget or any of its children contains text that needs to be translated, do not use `const` on it or its parents in the build method.**
+**Parameters:**
+- `newLocale`: Language code to switch to (e.g., 'es', 'ar')
 
-## 💖 Contributing
+**Effects:**
+- Loads the corresponding `.ln` file
+- Updates text direction
+- Triggers automatic UI rebuild via `localeNotifier`
 
-We have built `toLn` to be a game-changer, but we are just getting started. Contributions, issues, and feature requests are welcome! Feel free to check our [issues page](https://github.com/your_username/toln/issues).
+#### `ToLn.getAvailableLocales()`
+
+Get all available languages in your app.
+
+```dart
+static Future<List<LocaleInfo>> getAvailableLocales()
+```
+
+**Returns:** List of `LocaleInfo` records: `({String code, String name})`
+
+**Example:**
+```dart
+final locales = await ToLn.getAvailableLocales();
+// Result: [(code: 'en', name: 'English'), (code: 'es', name: 'Español')]
+```
+
+#### `ToLn.currentDirection`
+
+Get the text direction for the current language.
+
+```dart
+static TextDirection get currentDirection
+```
+
+**Returns:** `TextDirection.rtl` or `TextDirection.ltr`
+
+**RTL Languages:** ar, fa, he, ur (auto-detected)
+
+#### `ToLn.localeNotifier`
+
+ValueNotifier for reactive UI updates.
+
+```dart
+static final ValueNotifier<Locale> localeNotifier
+```
+
+**Usage:**
+```dart
+ValueListenableBuilder<Locale>(
+  valueListenable: ToLn.localeNotifier,
+  builder: (context, locale, child) {
+    return MaterialApp(locale: locale, ...);
+  },
+)
+```
+
+### Extension Methods
+
+#### `.toLn()`
+
+Translate a string.
+
+```dart
+extension ToLnExtension on String {
+  String toLn({String? key})
+}
+```
+
+**Parameters:**
+- `key` *(optional)*: Manual translation key override
+
+**Examples:**
+```dart
+'Hello World'.toLn()                    // Automatic key
+'Goodbye'.toLn(key: 'farewell')        // Manual key
+'Welcome, $username!'.toLn()            // With variables
+```
+
+---
+
+## ⚠️ Common Pitfalls
+
+### The `const` Problem
+
+**Problem:** Language changes but UI doesn't update.
+
+**Cause:** The `const` keyword tells Flutter the widget never rebuilds.
+
+**❌ Incorrect:**
+```dart
+home: const HomePage(),  // This won't update!
+```
+
+**✅ Correct:**
+```dart
+home: HomePage(),  // Now it can rebuild
+```
+
+**Rule:** Remove `const` from any widget containing translatable text or its ancestors.
+
+### Forgot to Add Assets
+
+**Problem:** App crashes with "Unable to load asset".
+
+**Solution:** Add locale files to `pubspec.yaml`:
+
+```yaml
+flutter:
+  assets:
+    - assets/locales/
+```
+
+---
+
+## 🎯 Real-World Examples
+
+### E-commerce App
+
+```dart
+class ProductCard extends StatelessWidget {
+  final Product product;
+
+  @override
+  Widget build(BuildContext context) {
+    return Card(
+      child: Column(
+        children: [
+          Image.network(product.imageUrl),
+          Text(product.name),  // Already in your database
+          Text('${product.price} USD'),
+          ElevatedButton(
+            onPressed: () {},
+            child: Text('Add to Cart'.toLn()),
+          ),
+          Text('Free shipping on orders over $50!'.toLn()),
+        ],
+      ),
+    );
+  }
+}
+```
+
+### Form Validation
+
+```dart
+String? validateEmail(String? value) {
+  if (value == null || value.isEmpty) {
+    return 'Email is required'.toLn();
+  }
+  if (!value.contains('@')) {
+    return 'Please enter a valid email'.toLn();
+  }
+  return null;
+}
+
+TextField(
+  decoration: InputDecoration(
+    labelText: 'Email'.toLn(),
+    errorText: validateEmail(email),
+  ),
+)
+```
+
+### Settings Screen with Language Picker
+
+```dart
+class SettingsScreen extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return ListView(
+      children: [
+        ListTile(
+          leading: Icon(Icons.language),
+          title: Text('Language'.toLn()),
+          subtitle: FutureBuilder<List<LocaleInfo>>(
+            future: ToLn.getAvailableLocales(),
+            builder: (context, snapshot) {
+              if (!snapshot.hasData) return Text('Loading...'.toLn());
+              final current = snapshot.data!.firstWhere(
+                (l) => l.code == ToLn.localeNotifier.value.languageCode,
+              );
+              return Text(current.name);
+            },
+          ),
+          trailing: Icon(Icons.arrow_forward_ios),
+          onTap: () => _showLanguagePicker(context),
+        ),
+      ],
+    );
+  }
+
+  void _showLanguagePicker(BuildContext context) async {
+    final locales = await ToLn.getAvailableLocales();
+    
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: Text('Select Language'.toLn()),
+        content: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: locales.map((locale) {
+            return RadioListTile<String>(
+              title: Text(locale.name),
+              value: locale.code,
+              groupValue: ToLn.localeNotifier.value.languageCode,
+              onChanged: (value) {
+                if (value != null) {
+                  ToLn.loadLocale(value);
+                  Navigator.pop(context);
+                }
+              },
+            );
+          }).toList(),
+        ),
+      ),
+    );
+  }
+}
+```
+
+---
+
+## 🤝 Contributing
+
+We welcome contributions! Here's how you can help:
+
+1. **Report Bugs**: [Open an issue](https://github.com/IrMaho/toLn/issues)
+2. **Suggest Features**: Share your ideas
+3. **Submit PRs**: Fix bugs or add features
+4. **Improve Docs**: Help us make documentation better
+5. **Spread the Word**: Star the repo ⭐
+
+### Development Setup
+
+```bash
+git clone https://github.com/IrMaho/toLn.git
+cd toLn
+flutter pub get
+dart test
+```
+
+---
 
 ## 📄 License
 
 This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+
+---
+
+## 🙏 Acknowledgments
+
+Built with ❤️ by [Shogh Shahadat](https://github.com/IrMaho)
+
+Special thanks to:
+- The Flutter team for an amazing framework
+- The Dart analyzer team for powerful AST tools
+- All our contributors and users
+
+---
+
+## 📞 Support
+
+- 📧 Email: support@example.com
+- 💬 GitHub Issues: [Report a problem](https://github.com/IrMaho/toLn/issues)
+- 📖 Documentation: [Full docs](https://github.com/IrMaho/toLn/wiki)
+
+---
+
+<p align="center">
+  <strong>Made with ❤️ for the Flutter community</strong>
+</p>
+
+<p align="center">
+  <a href="https://github.com/IrMaho/toLn">⭐ Star us on GitHub</a> •
+  <a href="https://pub.dev/packages/toln">📦 View on pub.dev</a>
+</p>
