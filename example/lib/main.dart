@@ -56,7 +56,7 @@ class ShowcaseApp extends StatelessWidget {
           // --- THE FINAL FIX IS HERE! ---
           // The 'const' keyword is removed.
           // This tells Flutter to rebuild ShowcasePage when the locale changes.
-          home: ShowcasePage(),
+          home: const ShowcasePage(),
         );
       },
     );

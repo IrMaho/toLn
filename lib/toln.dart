@@ -60,7 +60,9 @@ class ToLn {
   static Future<void> loadLocale(String newLocale) async {
     final inst = _instance;
     if (inst._currentLocale == newLocale &&
-        inst._currentTranslations.isNotEmpty) return;
+        inst._currentTranslations.isNotEmpty) {
+      return;
+    }
 
     try {
       if (newLocale == inst._baseLocale) {

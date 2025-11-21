@@ -197,7 +197,9 @@ class Migrator {
     }
 
     try {
-      final formattedContent = DartFormatter().format(newContent);
+      final formattedContent =
+          DartFormatter(languageVersion: DartFormatter.latestLanguageVersion)
+              .format(newContent);
       await File(path).writeAsString(formattedContent);
     } catch (e) {
       _migrationHadErrors = true;

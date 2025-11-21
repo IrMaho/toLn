@@ -61,7 +61,7 @@ class AutoApplier {
           astUnit.directives.whereType<ImportDirective>().lastOrNull;
       final offset = lastImport?.end ?? 0;
       final text =
-          (offset > 0 ? '\n' : '') + "import 'package:toln/toln.dart';\n";
+          "${offset > 0 ? '\n' : ''}import 'package:toln/toln.dart';\n";
       visitor.modifications.add((offset: offset, text: text));
     }
 
@@ -84,7 +84,9 @@ class AutoApplier {
           newContent.substring(mod.offset);
     }
 
-    final formattedContent = DartFormatter().format(newContent);
+    final formattedContent =
+        DartFormatter(languageVersion: DartFormatter.latestLanguageVersion)
+            .format(newContent);
     await File(path).writeAsString(formattedContent);
   }
 }
@@ -219,7 +221,7 @@ class _MainFunctionBodyVisitor extends RecursiveAstVisitor<void> {
 
   @override
   void visitMethodInvocation(MethodInvocation node) {
-    final element = node.methodName.staticElement;
+    final element = node.methodName.element;
     if (element != null) {
       final enclosingElementName = element.enclosingElement?.name;
       final methodName = element.name;

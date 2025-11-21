@@ -101,7 +101,7 @@ void main(List<String> arguments) async {
     }
   } on FormatException catch (e) {
     printError(e.message);
-    print(argParser.usage);
+    stdout.writeln(argParser.usage);
     exit(1);
   } catch (e) {
     printError('An unexpected error occurred: ${e.toString()}');
