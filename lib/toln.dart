@@ -1,5 +1,3 @@
-// lib/toln.dart
-
 import 'dart:convert';
 import 'package:flutter/foundation.dart' show kDebugMode, ValueNotifier;
 import 'package:flutter/services.dart';
@@ -7,8 +5,6 @@ import 'package:flutter/widgets.dart';
 
 typedef LocaleInfo = ({String code, String name});
 
-/// A revolutionary localization library that automates the entire translation workflow.
-/// Version 5.0 introduces robust fallback for empty display names.
 class ToLn {
   static final ToLn _instance = ToLn._internal();
   factory ToLn() => _instance;
@@ -44,15 +40,9 @@ class ToLn {
       String startLocale = initialLocale ??
           WidgetsBinding.instance.platformDispatcher.locale.languageCode;
       await loadLocale(startLocale);
-
-      if (kDebugMode) {
-        print(
-            'ToLn Initialized. Base: $baseLocale, Initial: ${inst._currentLocale}. Keys: ${inst._keyMap.length}');
-      }
     } catch (e) {
       if (kDebugMode) {
-        print(
-            'ToLn Initialization Error: Could not load base files. Error: $e');
+        print(e);
       }
     }
   }
@@ -74,60 +64,35 @@ class ToLn {
     } catch (e) {
       inst._currentTranslations = Map.from(inst._baseTranslations);
       inst._currentLocale = inst._baseLocale;
-      if (kDebugMode) {
-        print(
-            'ToLn Warning: Could not load locale "$newLocale". Falling back to base locale "${inst._baseLocale}".');
-      }
     }
 
     inst._updateTextDirection();
     localeNotifier.value = Locale(inst._currentLocale);
-
-    if (kDebugMode) {
-      print('ToLn Locale changed to: ${inst._currentLocale}');
-    }
   }
 
-  /// --- UPDATED IN V5.0: Handles empty ln_name values gracefully ---
   static Future<List<LocaleInfo>> getAvailableLocales() async {
     final List<LocaleInfo> availableLocales = [];
     final inst = _instance;
 
     try {
-      // 1. Handle the base locale first
       final String baseNameValue = inst._baseTranslations['ln_name'] ?? '';
       final baseName = baseNameValue.isNotEmpty
           ? baseNameValue
           : inst._baseLocale.toUpperCase();
       availableLocales.add((code: inst._baseLocale, name: baseName));
 
-      // 2. Scan for other locales
       List<String> localeAssetPaths = [];
 
       try {
-        // Try modern AssetManifest API first (Flutter 3.19+)
         final manifest = await AssetManifest.loadFromAssetBundle(rootBundle);
         localeAssetPaths = manifest.listAssets();
       } catch (e) {
-        // Fallback to legacy JSON parsing
-        if (kDebugMode) {
-          print(
-              'ToLn: AssetManifest API failed, falling back to JSON. Error: $e');
-        }
         try {
           final manifestContent =
               await rootBundle.loadString('AssetManifest.json');
           final Map<String, dynamic> manifestMap = json.decode(manifestContent);
           localeAssetPaths = manifestMap.keys.toList();
-        } catch (e2) {
-          if (kDebugMode) {
-            print('ToLn: AssetManifest.json failed too. Error: $e2');
-          }
-        }
-      }
-
-      if (kDebugMode) {
-        print('ToLn: All assets found: ${localeAssetPaths.length}');
+        } catch (_) {}
       }
 
       final filteredPaths = localeAssetPaths
@@ -136,20 +101,13 @@ class ToLn {
           .where((path) =>
               !path.endsWith('base.ln') && !path.endsWith('key_map.ln'));
 
-      if (kDebugMode) {
-        print('ToLn: Locale paths found: ${filteredPaths.toList()}');
-      }
-
       for (final path in filteredPaths) {
         final code = path.split('/').last.replaceAll('.ln', '');
         try {
           final fileContent = await rootBundle.loadString(path);
           final Map<String, dynamic> translations = json.decode(fileContent);
 
-          // --- THE FIX IS HERE! ---
-          // Get the ln_name value, defaulting to an empty string if null.
           final String nameValue = translations['ln_name'] as String? ?? '';
-          // If the retrieved name is empty, use the capitalized language code instead.
           final name = nameValue.isNotEmpty ? nameValue : code.toUpperCase();
 
           availableLocales.add((code: code, name: name));
@@ -159,9 +117,6 @@ class ToLn {
       }
       return availableLocales;
     } catch (e) {
-      if (kDebugMode) {
-        print('ToLn Error: Could not read AssetManifest to find locales. $e');
-      }
       return availableLocales.isEmpty
           ? [(code: inst._baseLocale, name: inst._baseLocale.toUpperCase())]
           : availableLocales;
@@ -222,15 +177,8 @@ class ToLn {
           return result;
         }
       } catch (e) {
-        if (kDebugMode) {
-          print(
-              'ToLn Internal Error: Failed to process template "$template". Error: $e');
-        }
         continue;
       }
-    }
-    if (kDebugMode) {
-      print('ToLn Warning: No key found for text: "$text"');
     }
     return text;
   }
